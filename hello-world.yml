@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+  hellowor:
+    image: ghcr.io/ibrahimiii/hello-world:latest
+    networks:
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.hello-http.rule=Host(`baim.cloud`)
+        - traefik.http.routers.hello-http.entrypoints=http
+        - traefik.http.routers.hello-http.middlewares=https-redirect
+        - traefik.http.routers.hello-https.rule=Host(`baim.cloud`)
+        - traefik.http.routers.hello-https.entrypoints=https
+        - traefik.http.routers.hello-https.tls=true
+        - traefik.http.routers.hello-https.tls.certresolver=le
+        - traefik.http.services.hello.loadbalancer.server.port=1323
+
+networks:
+  traefik-public:
+    external: true
